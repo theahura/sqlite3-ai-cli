@@ -28,17 +28,14 @@ npm install -g .
 
 ## Usage
 
-After installation, you can use the `sqlite3-ai-cli` command:
+After installation, you can use the `sqlite3-ai` command:
 
 ```bash
 # Connect to a database file
-sqlite3-ai-cli [database.db]
+sqlite3-ai [database.db]
 
 # Create/connect to a new database
-sqlite3-ai-cli mydatabase.db
-
-# Run without a database (in-memory)
-sqlite3-ai-cli
+sqlite3-ai mydatabase.db
 ```
 
 ### Development Usage
