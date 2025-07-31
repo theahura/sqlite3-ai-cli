@@ -1,0 +1,26 @@
+{
+  "name": "sqlite3-ai-cli",
+  "version": "1.0.0",
+  "description": "SQLite3 CLI tool with AI integration and tab completion",
+  "main": "dist/index.js",
+  "bin": {
+    "sqlite3-ai": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "keywords": ["sqlite3", "cli", "ai", "anthropic", "sql"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.28.0",
+    "readline": "^1.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0"
+  }
+}
