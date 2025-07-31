@@ -20,6 +20,10 @@
   ],
   "author": "Amol Kapoor",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theahura/sqlite3-ai-cli.git"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.28.0",
     "readline": "^1.3.0"
