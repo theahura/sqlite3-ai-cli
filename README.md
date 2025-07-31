@@ -12,19 +12,43 @@ A thin wrapper over the SQLite3 CLI with AI integration and tab completion.
 
 ## Installation
 
+### From npm (Recommended)
 ```bash
+npm install -g sqlite3-ai-cli
+```
+
+### From source
+```bash
+git clone <repository-url>
+cd sqlite3-ai-cli
 npm install
 npm run build
+npm install -g .
 ```
 
 ## Usage
 
+After installation, you can use the `sqlite3-ai-cli` command:
+
 ```bash
 # Connect to a database file
-npm start [database.db]
+sqlite3-ai-cli [database.db]
 
-# Or run in development mode
+# Create/connect to a new database
+sqlite3-ai-cli mydatabase.db
+
+# Run without a database (in-memory)
+sqlite3-ai-cli
+```
+
+### Development Usage
+```bash
+# Run in development mode
 npm run dev [database.db]
+
+# Build and run locally
+npm run build
+npm start [database.db]
 ```
 
 ## Commands
