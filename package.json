@@ -12,7 +12,7 @@
     "start": "node dist/index.js"
   },
   "keywords": ["sqlite3", "cli", "ai", "anthropic", "sql"],
-  "author": "",
+  "author": "Amol Kapoor",
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.28.0",
