@@ -1,6 +1,6 @@
 {
   "name": "sqlite3-ai-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SQLite3 CLI tool with AI integration and tab completion",
   "main": "dist/index.js",
   "bin": {
@@ -11,7 +11,13 @@
     "dev": "ts-node src/index.ts",
     "start": "node dist/index.js"
   },
-  "keywords": ["sqlite3", "cli", "ai", "anthropic", "sql"],
+  "keywords": [
+    "sqlite3",
+    "cli",
+    "ai",
+    "anthropic",
+    "sql"
+  ],
   "author": "Amol Kapoor",
   "license": "MIT",
   "dependencies": {
