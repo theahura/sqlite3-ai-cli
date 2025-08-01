@@ -16,12 +16,14 @@ class SQLite3AICLI {
   private sqlite3Process: ChildProcess | null = null;
   private currentStatement: string = '';
   private inMultiLineStatement: boolean = false;
+  private jsonMode: boolean = false;
 
   constructor() {
     this.config = new ConfigManager();
     this.db = new DatabaseManager();
     this.ai = new AIManager(this.config, this.db);
     this.completion = new CompletionManager(this.db);
+    this.jsonMode = true;
     
     this.rl = readline.createInterface({
       input: process.stdin,
@@ -86,6 +88,24 @@ class SQLite3AICLI {
         }
         return true;
 
+      case '.json':
+        if (args.length === 0) {
+          this.jsonMode = !this.jsonMode;
+          console.log(`JSON mode: ${this.jsonMode ? 'ON' : 'OFF'}`);
+        } else {
+          const setting = args[0].toLowerCase();
+          if (setting === 'on' || setting === 'true' || setting === '1') {
+            this.jsonMode = true;
+            console.log('JSON mode: ON');
+          } else if (setting === 'off' || setting === 'false' || setting === '0') {
+            this.jsonMode = false;
+            console.log('JSON mode: OFF');
+          } else {
+            console.log('Usage: .json [on|off]');
+          }
+        }
+        return true;
+
       default:
         return false; // Not handled, pass to sqlite3
     }
@@ -132,6 +152,44 @@ class SQLite3AICLI {
     this.rl.prompt();
   }
 
+  private formatJsonOutput(output: string): string {
+    try {
+      // Split output into lines and process each line
+      const lines = output.split('\n');
+      const formattedLines: string[] = [];
+      
+      for (const line of lines) {
+        const trimmedLine = line.trim();
+        if (!trimmedLine) {
+          formattedLines.push(line);
+          continue;
+        }
+        
+        // Try to parse as JSON
+        try {
+          const jsonObj = JSON.parse(trimmedLine);
+          formattedLines.push(JSON.stringify(jsonObj, null, 2));
+        } catch {
+          // If it's not valid JSON, check if it might be a JSON array or object fragment
+          if (trimmedLine.startsWith('{') || trimmedLine.startsWith('[')) {
+            try {
+              const jsonObj = JSON.parse(trimmedLine);
+              formattedLines.push(JSON.stringify(jsonObj, null, 2));
+            } catch {
+              formattedLines.push(line); // Keep original if not parseable
+            }
+          } else {
+            formattedLines.push(line); // Keep original if not JSON-like
+          }
+        }
+      }
+      
+      return formattedLines.join('\n');
+    } catch {
+      return output; // Return original if any error occurs
+    }
+  }
+
   private async executeCommand(command: string): Promise<void> {
     const trimmed = command.trim();
     
@@ -154,8 +212,15 @@ class SQLite3AICLI {
       // Always use stdin approach for consistency
       const sqlite3 = spawn('sqlite3', [dbPath]);
       
+      let outputBuffer = '';
+      
       sqlite3.stdout.on('data', (data) => {
-        process.stdout.write(data);
+        const output = data.toString();
+        if (this.jsonMode) {
+          outputBuffer += output;
+        } else {
+          process.stdout.write(data);
+        }
       });
 
       sqlite3.stderr.on('data', (data) => {
@@ -163,6 +228,10 @@ class SQLite3AICLI {
       });
 
       sqlite3.on('close', () => {
+        if (this.jsonMode && outputBuffer.trim()) {
+          const formattedOutput = this.formatJsonOutput(outputBuffer);
+          process.stdout.write(formattedOutput);
+        }
         resolve();
       });
 
@@ -189,7 +258,7 @@ class SQLite3AICLI {
       console.log('Connected to in-memory database');
     }
 
-    console.log('SQLite3 AI CLI - Type .help for help, .ai <prompt> for AI assistance');
+    console.log('SQLite3 AI CLI - Type .help for help, .ai <prompt> for AI assistance, .json for pretty JSON');
     console.log(`Model: ${this.config.getModel()}`);
     console.log(`API Key: ${this.config.getAnthropicKey() ? 'Set' : 'Not set'}`);
     console.log('');

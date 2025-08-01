@@ -55,7 +55,7 @@ export class CompletionManager {
 
   private getDotCommandCompletions(currentWord: string): string[] {
     const dotCommands = [
-      '.ai', '.anthropic-key', '.model', '.tables', '.schema', '.headers',
+      '.ai', '.anthropic-key', '.model', '.json', '.tables', '.schema', '.headers',
       '.mode', '.output', '.quit', '.exit', '.help', '.backup', '.restore'
     ];
 
